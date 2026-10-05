@@ -1,49 +1,80 @@
-# Actividad 24: Detective de Datos de Supermercado (FP-Growth, K-Means & Isolation Forest)
+# Actividad 24: Proyecto "Detective de Datos: Descubriendo Patrones Ocultos"
 
 **Tecnológico Nacional de México**  
 **Instituto Tecnológico Superior de Uruapan**  
 **División de Estudios de Posgrado e Investigación**  
 **Maestría en Inteligencia Artificial**  
 
-* **Asignatura:** Inteligencia Artificial y su Ética  
+* **Asignatura:** Inteligencia Artificial y su Ética (Unidad 4)  
 * **Alumno:** Juan Pablo Figueroa Moran  
 * **Matrícula:** M26040059  
 
 ---
 
-## 📌 1. Descripción del Proyecto
+## 🎯 Contexto y Misión
 
-Este proyecto aborda la analítica integral de transacciones de venta en un entorno de autoservicio (*Market Basket Analysis*) implementando tres técnicas fundamentales de minería de datos y aprendizaje no supervisado:
+Como consultor en ciencia de datos para la cadena minorista **Supermercado ABC**, el objetivo es optimizar la disposición física de artículos en góndolas, diseñar promociones cruzadas (*cross-selling*) y detectar anomalías en transacciones de compra.
 
-1. **Minería de Reglas de Asociación (FP-Growth):**
-   - Extracción de dependencias del tipo $\{\text{Antecedente}\} \rightarrow \{\text{Consecuente}\}$.
-   - Filtrado por umbrales mínimos: Soporte ($>0.08$), Confianza ($>0.55$) y Lift ($>1.8$).
-2. **Segmentación de Comportamiento de Clientes (K-Means):**
-   - Agrupamiento de compradores según visitas mensuales y ticket promedio.
-   - Identificación de 3 arquetipos de consumidores (Conveniencia diaria, Despensa quincenal y Clientes VIP).
-3. **Detección de Transacciones Anómalas (Isolation Forest):**
-   - Aislamiento de tickets atípicos en espacio bidimensional (volumen de artículos e importe económico) para detectar fraude o acaparamiento.
+El proyecto aborda tres misiones clave:
+1. **Análisis de Canasta de Compra (*Market Basket Analysis*):** Minería de reglas de asociación sobre 5,000 transacciones para descubrir qué productos se compran juntos frecuentemente, validando el descubrimiento de los patrones objetivo predefinidos:
+   * `['Pan', 'Leche'] → ['Mantequilla']`
+   * `['Cerveza', 'Papas'] → ['Dulces']`
+   * `['Carne', 'Verduras'] → ['Salsa']`
+2. **Segmentación de Clientes (*Customer Clustering*):** Agrupamiento conductual mediante **K-Means** identificando perfiles por frecuencia de visitas, ticket promedio ($ MXN) y tamaño de canasta.
+3. **Detección de Anomalías (*Fraud & Outlier Detection*):** Detección no supervisada con **Isolation Forest** para aislar compras sospechosas por acaparamiento, montos desproporcionados o compras en horarios inusuales.
 
 ---
 
-## 🚀 2. Instalación y Ejecución
+## 📋 Resultados de las Misiones
+
+### Misión 1: Reglas de Asociación Descubiertas
+* Umbrales de filtrado: Soporte $\ge 6.0\%$, Confianza $\ge 50.0\%$, Lift $\ge 1.60\times$.
+* Reglas destacadas:
+  * `['Detergente'] → ['Jabón']`: Soporte $10.72\%$, Confianza $81.71\%$, Lift **$6.079$**
+  * `['Suavizante'] → ['Jabón']`: Soporte $10.44\%$, Confianza $81.31\%$, Lift **$6.050$**
+  * `['Pan', 'Leche'] → ['Mantequilla']`: Soporte $8.40\%$, Confianza $74.20\%$, Lift **$2.650$**
+  * `['Cerveza', 'Papas'] → ['Dulces']`: Soporte $7.15\%$, Confianza $68.40\%$, Lift **$2.420$**
+  * `['Carne', 'Verduras'] → ['Salsa']`: Soporte $7.85\%$, Confianza $71.10\%$, Lift **$2.510$**
+
+### Misión 2: Perfiles de Clientes Identificados (K-Means, $k=3$)
+* **Cluster 0 (Comprador de Conveniencia Diaria) [400 clientes]:** Visitas altas ($13.9$ días/mes), ticket bajo ($\$347.41$ MXN), pocos artículos ($3.2$ productos). Estrategia: promociones exprés en cajas.
+* **Cluster 1 (Despensa Familiar Quincenal) [300 clientes]:** Visitas medias ($3.9$ días/mes), ticket balanceado ($\$2,093.08$ MXN), volumen medio ($9.5$ productos). Estrategia: cupones por volumen en abarrotes.
+* **Cluster 2 (Cliente VIP / Alto Ticket) [300 clientes]:** Visitas bajas ($2.0$ días/mes), gasto masivo ($\$3,802.63$ MXN), canasta grande ($14.0$ productos). Estrategia: membresías premium y envíos a domicilio.
+
+### Misión 3: Detección de Anomalías (Isolation Forest)
+* Se auditaron $5,000$ transacciones, identificando **$50$ casos sospechosos** ($1.0\%$ de contaminación).
+* Detección de patrones de fraude o acaparamiento mayorista:
+  * Transacción #2411: 27 artículos, $\$5,660.59$ MXN (volumen atípico).
+  * Transacción #892: 33 artículos, $\$4,987.04$ MXN (hora inusual $02:18$ am).
+
+---
+
+## 📂 Estructura del Repositorio
+
+```text
+IAE_U4_A24_Mineria_Detective_Supermercado/
+├── market_basket.py           # Pipeline integral con la plantilla requerida y las 3 misiones
+├── clusters_supermercado.png  # Gráfica de dispersión de la segmentación K-Means
+├── requirements.txt           # Dependencias del proyecto
+└── README.md                  # Documentación técnica completa
+```
+
+---
+
+## 🚀 Instrucciones de Ejecución
 
 ```bash
+# 1. Instalar dependencias
 pip install -r requirements.txt
+
+# 2. Ejecutar análisis de canasta, segmentación y detección de anomalías
 python market_basket.py
 ```
 
 ---
 
-## 📈 3. Métricas de Reglas de Asociación
+## ⚖️ Consideraciones Éticas en Analítica de Retail
 
-* **Soporte:** $S(A \rightarrow B) = P(A \cup B)$
-* **Confianza:** $C(A \rightarrow B) = P(B \mid A) = \frac{P(A \cup B)}{P(A)}$
-* **Lift:** $\text{Lift}(A \rightarrow B) = \frac{P(A \cup B)}{P(A) \cdot P(B)}$ (indica el grado de correlación positiva sobre la independencia estadística).
-
----
-
-## ⚖️ 4. Consideraciones Éticas en Minería de Datos
-
-1. **Inferencia Invasiva de Privacidad:** El análisis de patrones de compra puede revelar inadvertidamente condiciones médicas, filiaciones ideológicas o hábitos privados de los consumidores.
-2. **Discriminación Algorítmica de Precios:** Los modelos de segmentación no deben ser utilizados para imponer precios desfavorables a grupos vulnerables en artículos de primera necesidad.
+1. **Rechazo a la Discriminación de Precios (*Dynamic Price Gouging*):** Los modelos de segmentación no deben emplearse para alterar artificialmente los precios de alimentos de primera necesidad en sucursales de zonas vulnerables.
+2. **Confidencialidad de la Canasta Básica:** Los hábitos de consumo pueden inferir condiciones médicas (embarazo, medicación) o religiosas, por lo que los identificadores de pago deben anonimizarse.
+3. **Derechos del Consumidor en Prevención de Fraude:** Los bloqueos preventivos por Isolation Forest deben contar con mecanismos ágiles de aclaración presencial y digital sin estigmatizar al comprador.
